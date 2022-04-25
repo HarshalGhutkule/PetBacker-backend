@@ -3,6 +3,7 @@ const connect = require("./config/db");
 const {register,login} = require("./controllers/authController");
 const { body } = require('express-validator');
 const cors = require("cors");
+const serviceController = require("./controllers/serviceController");
 
 const app = express();
 
@@ -28,6 +29,7 @@ register);
 
 
 app.post("/login", login);
+app.use("/services", serviceController);
 
 app.listen(process.env.PORT || 3001, '0.0.0.0',async()=>{
     try{
