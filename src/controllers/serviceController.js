@@ -11,6 +11,13 @@ router.post("", authenticate, async(req,res)=>{
     try{
         const user_id = req.user._id;
         const service = await Service.create({
+            Url:req.body.Url,
+            Name:req.body.Name,
+            City:req.body.City,
+            Address:req.body.Address,
+            Cost:req.body.Cost,
+            Verified:req.body.Verified,
+            Rating:req.body.Rating,
             Summary: req.body.Summary,
             NumberOfPets: req.body.NumberOfPets,
             AcceptedPetTypes: req.body.AcceptedPetTypes,

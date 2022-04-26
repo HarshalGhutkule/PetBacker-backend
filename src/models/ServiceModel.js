@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const serviceSchema = new mongoose.Schema(
   {
+    Url:{type:String, required:true},
+    Name:{type:String, required:true},
+    City:{type:String, required:true},
+    Address:{type:String, required:true},
+    Cost:{type:Number, required:true, positive:true},
+    Verified:{type:String, required:true},
+    Rating:{type:Number, required:true, positive:true},
     Summary: {type:String, required:true},
     NumberOfPets: {type:Number, required:true, positive:true},
     AcceptedPetTypes: [{type:String}],
