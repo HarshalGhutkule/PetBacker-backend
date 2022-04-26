@@ -61,4 +61,27 @@ const login = async(req,res)=>{
     }
 }
 
+const reset = async(req,res)=>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try{
+        let user = await User.findOne({Email:req.body.Email});
+
+        if(!user) return res.status(400).send({message:"Please try with another email or password"});
+
+        let match = user.comparePassword(req.body.Password);
+
+        if(!match) return res.status(400).send({message:"Please try with another email or password"});
+
+        const token = createToken(user);
+
+        return res.status(200).send({user,token});
+    }
+    catch(err){
+        return res.status(500).send(err.message);
+    }
+}
+
 module.exports = {register,login};
