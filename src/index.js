@@ -1,6 +1,6 @@
 const express = require("express");
 const connect = require("./config/db");
-const {register,login} = require("./controllers/authController");
+const {register,login, reset} = require("./controllers/authController");
 const { body } = require('express-validator');
 const cors = require("cors");
 const serviceController = require("./controllers/serviceController");
@@ -27,6 +27,20 @@ app.post("/register",
         throw new Error(("Password is not strong"));
     }),
 register);
+
+app.patch(
+    "/reset/:id",
+    body("ConfirmPassword")
+      .isString()
+      .custom(async (value) => {
+        let pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+        if (pattern.test(value)) {
+          return true;
+        }
+        throw new Error("Password is not strong");
+      }),
+    reset
+  );
 
 
 app.post("/login", login);

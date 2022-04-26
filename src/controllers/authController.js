@@ -4,6 +4,7 @@ const {validationResult} = require("express-validator");
 const { sendMail } = require("../config/mail");
 const EventEmitter = require("events");
 const eventEmitter = new EventEmitter();
+const bcrypt = require('bcryptjs');
 
 const createToken = (user)=>{
     return jwt.sign({user}, 'shhhhh');
@@ -67,21 +68,33 @@ const reset = async(req,res)=>{
       return res.status(400).json({ errors: errors.array() });
     }
     try{
-        let user = await User.findOne({Email:req.body.Email});
+        let user = await User.findById(req.params.id);
 
-        if(!user) return res.status(400).send({message:"Please try with another email or password"});
+        if(!user) return res.status(400).send({message:"Please try with correct password"});
 
         let match = user.comparePassword(req.body.Password);
 
-        if(!match) return res.status(400).send({message:"Please try with another email or password"});
+        if(!match) return res.status(400).send({message:"Please try with correct password"});
+
+        var hash = bcrypt.hashSync(req.body.ConfirmPassword, 8);
+
+        user = await User.findByIdAndUpdate(
+          req.params.id,
+          { $set: { Password: hash } },
+          {
+            new: true,
+          }
+        );
 
         const token = createToken(user);
 
-        return res.status(200).send({user,token});
+        let status = "ok";
+
+        return res.status(200).send({user,token,status});
     }
     catch(err){
-        return res.status(500).send(err.message);
+        return res.status(500).send({ message: err.message });
     }
 }
 
-module.exports = {register,login};
+module.exports = {register,login,reset};
