@@ -39,7 +39,7 @@ router.post("", authenticate, async(req,res)=>{
     }
 });
 
-router.get("/:id", serviceController(Service).getOne);
+router.get("/:id",authenticate, serviceController(Service).getOne);
 
 router.patch("/:id", serviceController(Service).patch);
 
