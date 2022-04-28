@@ -41,8 +41,37 @@ router.post("", authenticate, async(req,res)=>{
 
 router.get("/:id",authenticate, serviceController(Service).getOne);
 
-router.patch("/:id", serviceController(Service).patch);
+router.patch("/:id",authenticate, async (req, res) => {
+    try {
+      const service = await Service.findByIdAndUpdate(req.params.id, {
+        Url:req.body.Url,
+        Name:req.body.Name,
+        City:req.body.City,
+        Address:req.body.Address,
+        Cost:req.body.Cost,
+        Verified:req.body.Verified,
+        Rating:req.body.Rating,
+        Summary: req.body.Summary,
+        NumberOfPets: req.body.NumberOfPets,
+        AcceptedPetTypes: req.body.AcceptedPetTypes,
+        AcceptedPetSize: req.body.AcceptedPetSize,
+        AdultSupervision: req.body.AdultSupervision,
+        PlaceWhereLeftUnsupervised: req.body.PlaceWhereLeftUnsupervised,
+        PlaceForSleep: req.body.PlaceForSleep,
+        PottyBreaks: req.body.PottyBreaks,
+        WalksPerDay: req.body.WalksPerDay,
+        TypeOfHome: req.body.TypeOfHome,
+        OutdoorArea: req.body.OutdoorArea,
+        EmergencyTransport: req.body.EmergencyTransport,
+    }, {
+        new: true,
+      });
+      return res.status(200).send(service);
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  });
 
-router.delete("/:id", serviceController(Service).delete);
+router.delete("/:id", authenticate, serviceController(Service).delete);
 
 module.exports = router;
