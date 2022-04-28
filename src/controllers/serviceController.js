@@ -5,7 +5,34 @@ const serviceController = require("./crudController");
 
 const router = express.Router();
 
-router.get("", serviceController(Service).get);
+router.get("", async(req,res)=>{
+    try{
+        if(req.query.page === undefined){
+            const service = await Service.find().lean().exec();
+
+            return res.status(200).send(service);
+        }
+        else if(req.query.page != undefined && req.query.sort != undefined){
+            const page = req.query.page || 1;
+            const size = req.query.size || 5;
+            const service = await Service.find().sort({Cost:req.query.sort}).skip((page-1)*size).limit(size).lean().exec();
+
+            const totalPages  = Math.ceil((await Service.find().countDocuments())/size);
+            return res.status(200).send({service,totalPages});
+
+        }
+        const page = req.query.page || 1;
+        const size = req.query.size || 3;
+        const service = await Service.find().skip((page-1)*size).limit(size).lean().exec();
+
+        const totalPages  = Math.ceil((await Service.find().countDocuments())/size);
+
+        return res.status(200).send({service,totalPages});
+    }
+    catch(err){
+        return res.status(500).send(err.message);
+    }
+});
 
 router.post("", authenticate, async(req,res)=>{
     try{
@@ -40,6 +67,15 @@ router.post("", authenticate, async(req,res)=>{
 });
 
 router.get("/:id",authenticate, serviceController(Service).getOne);
+
+router.get("/city/:city",authenticate, async (req, res) => {
+    try {
+      const service = await Service.find({City:{$regex:`^${req.params.city}`}}).lean().exec();
+      return res.status(200).send(service);
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  });
 
 router.patch("/:id",authenticate, async (req, res) => {
     try {
