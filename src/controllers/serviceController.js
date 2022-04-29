@@ -22,7 +22,7 @@ router.get("", async(req,res)=>{
 
         }
         const page = req.query.page || 1;
-        const size = req.query.size || 3;
+        const size = req.query.size || 5;
         const service = await Service.find().skip((page-1)*size).limit(size).lean().exec();
 
         const totalPages  = Math.ceil((await Service.find().countDocuments())/size);
