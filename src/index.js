@@ -5,6 +5,7 @@ const { body } = require('express-validator');
 const cors = require("cors");
 const serviceController = require("./controllers/serviceController");
 const userController = require("./controllers/userController");
+const petDetailController = require("./controllers/petDetailController");
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.patch(
 
 app.post("/login", login);
 app.use("/services", serviceController);
+app.use("/petdetails", petDetailController);
 app.use("/users", userController);
 
 app.listen(process.env.PORT || 3001, '0.0.0.0',async()=>{
