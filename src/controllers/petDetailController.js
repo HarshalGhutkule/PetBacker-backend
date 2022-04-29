@@ -51,7 +51,6 @@ router.get("/:id",authenticate, async (req, res) => {
 
 router.patch("/:id",authenticate, async (req, res) => {
     try {
-        console.log(req.body);
       const petdetail = await Petdetail.findByIdAndUpdate(req.params.id, {
         status:req.body.status
       }, {

@@ -66,7 +66,7 @@ router.post("", authenticate, async(req,res)=>{
     }
 });
 
-router.get("/:id",authenticate, serviceController(Service).getOne);
+router.get("/:id", serviceController(Service).getOne);
 
 router.get("/city/:city",authenticate, async (req, res) => {
     try {
