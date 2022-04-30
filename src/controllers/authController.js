@@ -10,6 +10,38 @@ const createToken = (user)=>{
     return jwt.sign({user}, 'shhhhh');
 }
 
+const otpSend = async(req,res)=>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try{
+        let user = await User.findOne({Email:req.body.Email}).lean().exec();
+
+        if(user) return res.status(400).send({message:"Please try another mail"});
+
+        let otp = "";
+        for (var i = 0; i < 4; i++) {
+        otp += (Math.floor(Math.random() * (10 - 0)) + 0).toString();
+        }
+
+        eventEmitter.on("User Registered", sendMail);
+
+        eventEmitter.emit("User Registered", {
+            from:"harshalghutlule@gmail.com",
+            to:req.body.Email,
+            user:req.body,
+            otp:otp
+        })
+
+
+        return res.status(200).send({otp});
+    }
+    catch(err){
+        return res.status(500).send(err.message);
+    }
+}
+
 const register = async(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -21,14 +53,6 @@ const register = async(req,res)=>{
         if(user) return res.status(400).send({message:"Please try another mail"});
 
         user = await User.create(req.body);
-
-        eventEmitter.on("User Registered", sendMail);
-
-        eventEmitter.emit("User Registered", {
-            from:"harshalghutlule@gmail.com",
-            to:user.Email,
-            user:user,
-        })
 
         const token = createToken(user);
 
@@ -97,4 +121,4 @@ const reset = async(req,res)=>{
     }
 }
 
-module.exports = {register,login,reset};
+module.exports = {register,login,reset,otpSend};

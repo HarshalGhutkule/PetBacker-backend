@@ -1,6 +1,6 @@
 const express = require("express");
 const connect = require("./config/db");
-const {register,login, reset} = require("./controllers/authController");
+const {register,login, reset, otpSend} = require("./controllers/authController");
 const { body } = require('express-validator');
 const cors = require("cors");
 const serviceController = require("./controllers/serviceController");
@@ -43,7 +43,7 @@ app.patch(
     reset
   );
 
-
+app.post("/sendotp", otpSend);
 app.post("/login", login);
 app.use("/services", serviceController);
 app.use("/petdetails", petDetailController);
