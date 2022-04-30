@@ -68,7 +68,7 @@ router.post("", authenticate, async(req,res)=>{
 
 router.get("/:id", serviceController(Service).getOne);
 
-router.get("/city/:city",authenticate, async (req, res) => {
+router.get("/city/:city", async (req, res) => {
     try {
       const service = await Service.find({City:{$regex:`^${req.params.city}`}}).lean().exec();
       return res.status(200).send(service);
