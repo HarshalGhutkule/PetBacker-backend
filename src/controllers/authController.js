@@ -20,10 +20,7 @@ const otpSend = async(req,res)=>{
 
         if(user) return res.status(400).send({message:"Please try another mail"});
 
-        let otp = "";
-        for (var i = 0; i < 4; i++) {
-        otp += (Math.floor(Math.random() * (10 - 0)) + 0).toString();
-        }
+        let otp = (Math.floor(Math.random() * (9999 - 1000) + 1000).toString());
 
         eventEmitter.on("User Registered", sendMail);
 
