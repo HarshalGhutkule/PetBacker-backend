@@ -6,8 +6,8 @@ const CLIENT_SECRET = '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';
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
 const REFRESH_TOKEN = '1//04kQqEFiluxIhCgYIARAAGAQSNwF-L9IrO_4qQV_RierYjgM7WIwZwfFfBQUIUKA7yUOh9JY1yM_sVVn1lV28k_qN5eQqqbuxjT4';
 
-const oAuth2Client = new google.auth.OAuth2(CLIENT_ID,CLIENT_SECRET,REDIRECT_URI);
-oAuth2Client.setCredentials({refresh_token:REFRESH_TOKEN});
+const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID,process.env.CLIENT_SECRET,process.env.REDIRECT_URI);
+oAuth2Client.setCredentials({refresh_token:process.env.REFRESH_TOKEN});
 
 const sendMail = async({from,to,user,otp})=>{
     try{
@@ -17,9 +17,9 @@ const sendMail = async({from,to,user,otp})=>{
             auth: {
                 type:'OAuth2',
               user: 'harshalghutkule@gmail.com',
-              clientId:CLIENT_ID,
-              clientSecret:CLIENT_SECRET,
-              refreshToken:REFRESH_TOKEN,
+              clientId:process.env.CLIENT_ID,
+              clientSecret:process.env.CLIENT_SECRET,
+              refreshToken:process.env.REFRESH_TOKEN,
               accessToken:accessToken
             },
         });
